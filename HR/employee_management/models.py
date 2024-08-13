@@ -23,6 +23,9 @@ class Employee(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     supervisor = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='supervisees')
 
+    def __str__(self):
+        return f"{self.name} ({self.employee_id})"
+
 class PersonalInformation(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
     passport_id_number = models.CharField(max_length=100)
@@ -34,6 +37,9 @@ class PersonalInformation(models.Model):
     spouse_employment = models.CharField(max_length=255, null=True, blank=True)
     children_no = models.IntegerField(null=True, blank=True)
 
+    def __str__(self):
+        return f"Personal Information for {self.employee.name}"
+
 class EmergencyContact(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -42,12 +48,18 @@ class EmergencyContact(models.Model):
     phone2 = models.CharField(max_length=20, null=True, blank=True)
     is_primary = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Emergency Contact: {self.name} ({self.relationship}) for {self.employee.name}"
+
 class BankInfo(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
     bank_name = models.CharField(max_length=255)
     bank_acc_no = models.CharField(max_length=100)
     ifsc_code = models.CharField(max_length=11)
     pan_no = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"Bank Info for {self.employee.name}"
 
 class FamilyInfo(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -56,6 +68,9 @@ class FamilyInfo(models.Model):
     date_of_birth = models.DateField()
     phone = models.CharField(max_length=20, null=True, blank=True)
 
+    def __str__(self):
+        return f"Family Info: {self.name} ({self.relationship}) for {self.employee.name}"
+
 class EducationInfo(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     university_name = models.CharField(max_length=255)
@@ -63,9 +78,15 @@ class EducationInfo(models.Model):
     finish_date = models.DateField()
     diploma = models.CharField(max_length=255)
 
+    def __str__(self):
+        return f"Education: {self.university_name} for {self.employee.name}"
+
 class Experience(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=255)
     role = models.CharField(max_length=255)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Experience: {self.company_name} ({self.role}) for {self.employee.name}"
