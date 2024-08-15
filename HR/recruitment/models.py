@@ -27,3 +27,13 @@ class Applicant(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.job_posting.title}"
+
+
+class OnboardingChecklist(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    task = models.CharField(max_length=255)
+    is_completed = models.BooleanField(default=False)
+    completion_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Task: {self.task} for {self.employee.name}"
